@@ -263,6 +263,25 @@ public abstract class EObjectProxyTests {
     }
     
     @Test
+    public void getLabelExpression() {
+        assertEquals("", testProxy.getLabelExpression());
+    }
+    
+    @Test
+    public void setLabelExpression() {
+        assertEquals("", testProxy.getLabelExpression());
+
+        try {
+            testProxy.setLabelExpression("expression");
+            assertEquals("expression", testProxy.getLabelExpression());
+        }
+        // Will throw exception if this object doesn't support setLabelExpression()
+        catch(ArchiScriptException ex) {
+            assertEquals("", testProxy.getLabelExpression());
+        }
+    }
+
+    @Test
     public void attr_ID() {
         assertEquals(((IIdentifier)testProxy.getEObject()).getId(), testProxy.attr(IModelConstants.ID));
     }

@@ -14,6 +14,8 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.osgi.util.NLS;
 
 import com.archimatetool.canvas.model.ICanvasModel;
+import com.archimatetool.editor.model.commands.FeatureCommand;
+import com.archimatetool.editor.ui.textrender.TextRenderer;
 import com.archimatetool.model.IArchimateDiagramModel;
 import com.archimatetool.model.IArchimateElement;
 import com.archimatetool.model.IArchimateModel;
@@ -23,6 +25,7 @@ import com.archimatetool.model.IDiagramModelConnection;
 import com.archimatetool.model.IDiagramModelNote;
 import com.archimatetool.model.IDiagramModelObject;
 import com.archimatetool.model.IDocumentable;
+import com.archimatetool.model.IFeatures;
 import com.archimatetool.model.IFolder;
 import com.archimatetool.model.IIdentifier;
 import com.archimatetool.model.INameable;
@@ -33,6 +36,7 @@ import com.archimatetool.script.ArchiScriptException;
 import com.archimatetool.script.commands.AddPropertyCommand;
 import com.archimatetool.script.commands.CommandHandler;
 import com.archimatetool.script.commands.RemovePropertiesCommand;
+import com.archimatetool.script.commands.ScriptCommandWrapper;
 import com.archimatetool.script.commands.SetCommand;
 
 /**
@@ -257,6 +261,8 @@ public abstract class EObjectProxy implements IModelConstants, Comparable<EObjec
         }
     }
 
+    // ========================================= Properties =========================================
+    
 	/**
      * Return the list of properties' key
      * @return
@@ -427,7 +433,27 @@ public abstract class EObjectProxy implements IModelConstants, Comparable<EObjec
         
         return this;
     }
+    
+    // ========================================= Label Expressions =========================================
+    
+    public String getLabelExpression() {
+        return getEObject() instanceof IFeatures ? ((IFeatures)getEObject()).getFeatures().getString(TextRenderer.FEATURE_NAME, "") : ""; //$NON-NLS-1$ //$NON-NLS-2$
+    }
+    
+    public EObjectProxy setLabelExpression(String expression) {
+        if(TextRenderer.getDefault().isSupportedObject(getEObject())) {
+            CommandHandler.executeCommand(new ScriptCommandWrapper(new FeatureCommand("", (IFeatures)getEObject(), //$NON-NLS-1$
+                    TextRenderer.FEATURE_NAME, expression, ""), getEObject())); //$NON-NLS-1$
+        }
+        else {
+            throw new ArchiScriptException(NLS.bind(Messages.EObjectProxy_1, this));
+        }
+        
+        return this;
+    }
 
+    // =====================================================================================================
+    
     protected Object attr(String attribute) {
         switch(attribute) {
             case TYPE:
