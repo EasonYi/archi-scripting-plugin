@@ -19,6 +19,7 @@ import com.archimatetool.editor.ui.textrender.TextRenderer;
 import com.archimatetool.model.IArchimateDiagramModel;
 import com.archimatetool.model.IArchimateElement;
 import com.archimatetool.model.IArchimateModel;
+import com.archimatetool.model.IArchimateModelObject;
 import com.archimatetool.model.IArchimatePackage;
 import com.archimatetool.model.IArchimateRelationship;
 import com.archimatetool.model.IDiagramModelConnection;
@@ -437,7 +438,10 @@ public abstract class EObjectProxy implements IModelConstants, Comparable<EObjec
     // ========================================= Label Expressions =========================================
     
     public String getLabelExpression() {
-        return getEObject() instanceof IFeatures ? ((IFeatures)getEObject()).getFeatures().getString(TextRenderer.FEATURE_NAME, "") : ""; //$NON-NLS-1$ //$NON-NLS-2$
+        if(TextRenderer.getDefault().isSupportedObject(getEObject())) {
+            return TextRenderer.getDefault().getFormatExpression((IArchimateModelObject)getEObject());
+        }
+        return null;
     }
     
     public EObjectProxy setLabelExpression(String expression) {
@@ -450,6 +454,14 @@ public abstract class EObjectProxy implements IModelConstants, Comparable<EObjec
         }
         
         return this;
+    }
+    
+    public String getLabelValue() {
+        if(TextRenderer.getDefault().isSupportedObject(getEObject())) {
+            return TextRenderer.getDefault().render((IArchimateModelObject)getEObject());
+        }
+        
+        return ""; //$NON-NLS-1$
     }
 
     // =====================================================================================================

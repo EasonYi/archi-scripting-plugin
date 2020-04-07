@@ -264,20 +264,34 @@ public abstract class EObjectProxyTests {
     
     @Test
     public void getLabelExpression() {
-        assertEquals("", testProxy.getLabelExpression());
+        assertEquals(null, testProxy.getLabelExpression());
     }
     
     @Test
     public void setLabelExpression() {
-        assertEquals("", testProxy.getLabelExpression());
+        assertEquals(null, testProxy.getLabelExpression());
 
         try {
-            testProxy.setLabelExpression("expression");
-            assertEquals("expression", testProxy.getLabelExpression());
+            testProxy.setLabelExpression("${name}");
+            assertEquals("${name}", testProxy.getLabelExpression());
         }
         // Will throw exception if this object doesn't support setLabelExpression()
         catch(ArchiScriptException ex) {
-            assertEquals("", testProxy.getLabelExpression());
+            assertEquals(null, testProxy.getLabelExpression());
+        }
+    }
+    
+    @Test
+    public void getLabelValue() {
+        assertEquals("", testProxy.getLabelValue());
+        
+        try {
+            testProxy.setLabelExpression("${name}"); 
+            assertEquals(testProxy.getName(), testProxy.getLabelValue());
+        }
+        // Will throw exception if this object doesn't support setLabelExpression()
+        catch(ArchiScriptException ex) {
+            assertEquals("", testProxy.getLabelValue());
         }
     }
 
