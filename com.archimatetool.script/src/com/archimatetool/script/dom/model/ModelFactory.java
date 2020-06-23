@@ -280,7 +280,7 @@ class ModelFactory {
     /**
      * Create and add a view reference to another view
      */
-    static DiagramModelObjectProxy createViewReference(IDiagramModelContainer parent, IDiagramModel dm,
+    static DiagramModelReferenceProxy createViewReference(IDiagramModelContainer parent, IDiagramModel dm,
             int x, int y, int width, int height, boolean autoNest) {
         
         // Ensure all components share the same model
@@ -294,7 +294,7 @@ class ModelFactory {
         IDiagramModelReference dmRef = IArchimateFactory.eINSTANCE.createDiagramModelReference();
         dmRef.setReferencedModel(dm);
         
-        return createDiagramObject(parent, dmRef, x, y, width, height, autoNest);
+        return (DiagramModelReferenceProxy)createDiagramObject(parent, dmRef, x, y, width, height, autoNest);
     }
     
     /**
